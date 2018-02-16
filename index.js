@@ -1,11 +1,11 @@
 const express = require('express');
+const routesUsers = require('./routes/users')
 
 //set up express app
 const app = express();
 
-app.get('/api/users', function(req, res){
-    res.send({name : 'jaruwit suriyo2'});
-});
+//use router
+app.use(routesUsers);
 
 //listen for requests server port
 let serverPort = 4000; 

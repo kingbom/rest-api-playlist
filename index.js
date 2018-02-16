@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 //set up express app
 const app = express();
 
-//use body parser
+//use body parser 
 app.use(bodyParser.json());
 
 //use router of user

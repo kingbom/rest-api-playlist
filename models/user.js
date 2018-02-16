@@ -4,15 +4,15 @@
  const UserSchema = new Schema({
      name : {
          type: String,
-         require : [true, 'name is required .']
+         required : [true, 'name is required .']
      },
      mobile : {
         type: String,
-        require : [true, 'mobile is required .']
+        required : [true, 'mobile is required .']
      },
      email : {
         type: String,
-        require : [true, 'email is required .']
+        required : [true, 'email is required .']
      },
      position : {
         type: String

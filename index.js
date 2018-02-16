@@ -15,6 +15,11 @@ app.use(bodyParser.json());
 //use router of user
 app.use('/api', require('./routes/users'));
 
+//error handing middleware
+app.use(function(err, req, res, next){
+    res.status(422).send({error : err.message}); 
+});
+
 //listen for requests server port
 let serverPort = 4000; 
 app.listen(process.env.port || serverPort, function(){

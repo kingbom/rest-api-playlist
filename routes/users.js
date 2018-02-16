@@ -5,31 +5,42 @@ const User = require('../models/user');
 router.get('/users', function(req, res, next){
     User.find().then(function(data){
         res.send(data); 
-    }).catch(next);
+    });
 });
 
 router.get('/users/:id', function(req, res, next){
     User.findById({_id : req.params.id}).then(function(data){
-        res.send(data); 
-    }).catch(next);
+        checkDataToRes(res, data);
+    });
 });
 
 router.post('/users', function(req, res, next){
     User.create(req.body).then(function(data){
         res.send(data); 
-    }).catch(next) ;
+    }).catch(next);
     
-}); 
+});
+ 
 router.put('/users/:id', function(req, res, next){
-    User.update({_id : req.params.id},req.body).then(function(data){
-        res.send(data); 
-    }).catch(next) ;
+    User.findByIdAndUpdate({_id : req.params.id}, req.body).then(function(data){
+        User.findById({_id : req.params.id}).then(function(data){
+            checkDataToRes(res, data);
+        })
+    });
 });
 
 router.delete('/users/:id', function(req, res, next){
-    User.deleteOne({_id : req.params.id}).then(function(data){
-        res.send(data); 
-    }).catch(next);
+    User.findByIdAndRemove({_id : req.params.id}).then(function(data){
+        checkDataToRes(res, data);
+    });
 });
+
+var checkDataToRes = (res, data) => {
+    if(data){
+        res.send(data); 
+    }else{
+        res.status(404).send({error : "data not found"}); 
+    }
+}
 
 module.exports = router;

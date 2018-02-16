@@ -8,7 +8,7 @@ router.get('/users', function(req, res){
 });
 
 router.post('/users', function(req, res){
-    res.send({type :'POST'});
+    res.send(req.body); 
 });
 
 router.put('/users/:id', function(req, res){

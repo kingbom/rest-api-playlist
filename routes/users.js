@@ -5,6 +5,7 @@ const bcrypt   = require("bcryptjs");
 const passport = require('passport');
 const jwt      = require('jsonwebtoken');
 const config   = require("../config/database");
+const emailSevice = require('../service/mail');
  
 router.get('/users', (req, res, next) => {
     User.findAll((err, data) =>{
@@ -32,6 +33,7 @@ router.post('/register', (req, res, next) => {
             User.add(req.body, (err, data) =>{
                 res.send(data); 
             });
+            sendMail(req.body.email);
         });
     });
 });
@@ -80,9 +82,19 @@ var verifyPassword = (password, user, res) => {
                 age : user.age,
                 avilable : user.avilable
             });
-            
+
         }else{
             return res.status(401).json({status: 401, message: 'Invalid authentication'});
+        }
+    });
+}
+
+var sendMail = (sensTo) => {
+    emailSevice.sendMail(sensTo, 'register success', 'register success', (err, data) =>{
+        if(err){
+            console.log(err.message);
+        }else{
+            console.log('Sendmail success');
         }
     });
 }

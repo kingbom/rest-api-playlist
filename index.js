@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const config = require("./config/database");
+const passport = require("passport");
 
 //set up express app
 const app = express();
@@ -14,6 +15,12 @@ mongoose.connection.on('error', () => console.log('connect to database error :',
 
 //use body parser 
 app.use(bodyParser.json());
+
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session())
+
+require('./config/passport')(passport);
 
 //use router of user
 app.use('/api', require('./routes/users'));

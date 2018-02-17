@@ -2,50 +2,88 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 const bcrypt   = require("bcryptjs");
+const passport = require('passport');
+const jwt      = require('jsonwebtoken');
+const config   = require("../config/database");
  
 router.get('/users', (req, res, next) => {
-    User.find().then(function(data){
+    User.findAll((err, data) =>{
         res.send(data); 
     });
 });
 
 router.get('/users/:id', (req, res, next) => {
-    User.findById({_id : req.params.id}).then(function(data){
+    User.getUserById(req.params.id, (err, data) => {
         checkDataToRes(res, data);
     });
 });
 
 router.post('/users', (req, res, next) => {
-    User.create(req.body).then(function(data){
+    User.add(req.body, (err, data) =>{
         res.send(data); 
-    }).catch(next);
+    });
 });
 
 router.post('/register', (req, res, next) => {
     bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(req.body.password, salt, (err, hash) => {
+        bcrypt.hash(req.body.password, salt, (err,  hash) => {
             if(err) throw err
             req.body.password = hash;
-            User.create(req.body).then(function(data){
+            User.add(req.body, (err, data) =>{
                 res.send(data); 
-            }).catch(next);
+            });
         });
     });
 });
  
 router.put('/users/:id', (req, res, next) => {
-    User.findByIdAndUpdate({_id : req.params.id}, req.body).then(function(data){
-        User.findById({_id : req.params.id}).then(function(data){
+    User.update(req.params.id, req.body, (err, data) => {
+        User.getUserById(req.params.id, (err, data) => {
             checkDataToRes(res, data);
         });
     });
 });
 
 router.delete('/users/:id', (req, res, next) => {
-    User.findByIdAndRemove({_id : req.params.id}).then(function(data){
+    User.delete(req.params.id, (err, data) => {
         checkDataToRes(res, data);
     });
 });
+
+router.post('/authentication', (req, res, next) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    User.getUserByEmail(email, (err, user) => {
+        if(err) throw err;
+        if(!user){
+            return res.json({success: false, msg: 'User not found'});
+        }
+        verifyPassword(password, user, res);
+    });
+});
+
+var verifyPassword = (password, user, res) => {
+    User.verifyPassword(password, user.password, (err, isMatch) => {
+        if(err) throw err;
+        if(isMatch){
+            const token = jwt.sign(user, config.secrect, {
+                expiresIn : 684800 
+            });
+
+            res.json({
+                success: true,
+                token : 'JWT '+token,
+                name : user.name,
+                email: user.email,
+                mobile: user.mobile,
+                age : user.age,
+                avilable : user.avilable
+            });
+        }else{
+            return res.json({success: false, msg: 'Wrong password'});
+        }
+    });
+}
 
 var checkDataToRes = (res, data) => {
     if(data){

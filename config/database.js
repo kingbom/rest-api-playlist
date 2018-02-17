@@ -1,3 +1,4 @@
 module.exports = {
-    database : 'mongodb://localhost/restapi'
+    database : 'mongodb://localhost/restapi',
+    secrect :'yousecrect'
 }

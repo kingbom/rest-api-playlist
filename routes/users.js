@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const bcrypt   = require("bcryptjs");
  
 router.get('/users', (req, res, next) => {
     User.find().then(function(data){
@@ -21,9 +22,15 @@ router.post('/users', (req, res, next) => {
 });
 
 router.post('/register', (req, res, next) => {
-    User.create(req.body).then(function(data){
-        res.send(data); 
-    }).catch(next);
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(req.body.password, salt, (err, hash) => {
+            if(err) throw err
+            req.body.password = hash;
+            User.create(req.body).then(function(data){
+                res.send(data); 
+            }).catch(next);
+        });
+    });
 });
  
 router.put('/users/:id', (req, res, next) => {

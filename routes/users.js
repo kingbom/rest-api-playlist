@@ -19,6 +19,12 @@ router.post('/users', (req, res, next) => {
         res.send(data); 
     }).catch(next);
 });
+
+router.post('/register', (req, res, next) => {
+    User.create(req.body).then(function(data){
+        res.send(data); 
+    }).catch(next);
+});
  
 router.put('/users/:id', (req, res, next) => {
     User.findByIdAndUpdate({_id : req.params.id}, req.body).then(function(data){

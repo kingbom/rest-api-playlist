@@ -56,7 +56,7 @@ router.post('/authentication', (req, res, next) => {
     User.getUserByEmail(email, (err, user) => {
         if(err) throw err;
         if(!user){
-            return res.json({success: false, msg: 'User not found'});
+            return res.json({success: false, msg: 'Invalid authentication'});
         }
         verifyPassword(password, user, res);
     });
@@ -80,7 +80,7 @@ var verifyPassword = (password, user, res) => {
                 avilable : user.avilable
             });
         }else{
-            return res.json({success: false, msg: 'Wrong password'});
+            return res.json({success: false, msg: 'Invalid authentication'});
         }
     });
 }
@@ -89,7 +89,7 @@ var checkDataToRes = (res, data) => {
     if(data){
         res.send(data); 
     }else{
-        res.status(404).send({error : "data not found"}); 
+        res.status(404).send({error : "Data not found"}); 
     }
 }
 

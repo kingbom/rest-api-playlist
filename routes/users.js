@@ -56,7 +56,7 @@ router.post('/authentication', (req, res, next) => {
     User.getUserByEmail(email, (err, user) => {
         if(err) throw err;
         if(!user){
-            return res.json({success: false, msg: 'Invalid authentication'});
+            return res.status(401).json({status: 401, message: 'Invalid authentication'});
         }
         verifyPassword(password, user, res);
     });
@@ -71,7 +71,8 @@ var verifyPassword = (password, user, res) => {
             });
 
             res.json({
-                success: true,
+                status: 200,
+                message : 'Success',
                 token : 'JWT '+token,
                 name : user.name,
                 email: user.email,
@@ -79,8 +80,9 @@ var verifyPassword = (password, user, res) => {
                 age : user.age,
                 avilable : user.avilable
             });
+            
         }else{
-            return res.json({success: false, msg: 'Invalid authentication'});
+            return res.status(401).json({status: 401, message: 'Invalid authentication'});
         }
     });
 }
@@ -89,7 +91,7 @@ var checkDataToRes = (res, data) => {
     if(data){
         res.send(data); 
     }else{
-        res.status(404).send({error : "Data not found"}); 
+        res.status(404).json({status: 404, message : "Data not found"}); 
     }
 }
 

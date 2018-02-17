@@ -1,13 +1,13 @@
 {
-  "name": "rest-api-playlist",
+  "name": "user service",
   "version": "1.0.0",
-  "description": "rest api",
-  "main": "index.js",
+  "description": "user service",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "jaruwit suriyo",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

@@ -38,13 +38,35 @@
 
  
  const UserSchema = mongoose.Schema({
-    name : { type: String, required : [true, 'name is required .']},
-    mobile : { type: String, required : [true, 'mobile is required .']},
-    email : { type: String, required : [true, 'email is required .']},
-    password : { type: String, required : [true, 'password is required .']},
-    age : { type: Number},
-    sex : { type: String},
-    avilable : {type : Boolean,default : true}
+    name : { 
+        type: String, 
+        required : [true, 'name is required .']
+    },
+    mobile : { 
+        type: String,
+        unique: true, 
+        required : [true, 'mobile is required .']
+    },
+    email : { 
+        type: String, 
+        unique: true, 
+        required : [true, 'email is required .'],
+        match : /.+\@.+\.+/
+    },     
+    password : { 
+        type: String, 
+        required : [true, 'password is required .']
+    },
+    age : { 
+        type: Number
+    },
+    sex : { 
+        type: String
+    },
+    avilable : {
+        type : Boolean,
+        default : true
+    }
 });
 
  const User = mongoose.model('user', UserSchema); 
@@ -95,17 +117,19 @@ module.exports.delete = function(id, callback){
 }
 
 /**
- * update bi id
+ * update by id
  * @param {*} id 
  * @param {*} user 
  * @param {*} callback 
  */
 module.exports.update = function(id, user, callback){
-    User.findByIdAndUpdate({_id : id}, user, callback);    
+    User.findByIdAndUpdate({_id : id}, user, callback => {
+        User.findById(id, callback);
+    });    
 }
 
 /**
- * comparePassword
+ * verifyPassword
  * @param {*} candidatePassword 
  * @param {*} hash 
  * @param {*} callback 

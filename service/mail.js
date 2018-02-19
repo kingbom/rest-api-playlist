@@ -3,8 +3,8 @@ var mailer = require("nodemailer");
 const smtpTransport = mailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'test@gmail.com',
-      pass: 'passwordmail'
+      user: 'xxx@gmail.com',
+      pass: 'xxxx'
     }
   });
 

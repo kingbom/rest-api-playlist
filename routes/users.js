@@ -21,6 +21,7 @@ router.get('/users/:id', (req, res, next) => {
 
 router.post('/users', (req, res, next) => {
     User.add(req.body, (err, data) =>{
+        if(err) return next(err);
         res.send(data); 
     });
 });
@@ -30,19 +31,21 @@ router.post('/register', (req, res, next) => {
         bcrypt.hash(req.body.password, salt, (err,  hash) => {
             if(err) throw err
             req.body.password = hash;
-            User.add(req.body, (err, data) =>{
-                res.send(data); 
-            });
-            sendMail(req.body.email);
+            User.add(req.body, (err, data) => {
+                if(err) {
+                    return next(err);
+                }else{
+                    res.send(data); 
+                    sendMail(req.body.email);
+                }
+            })
         });
     });
 });
  
 router.put('/users/:id', (req, res, next) => {
     User.update(req.params.id, req.body, (err, data) => {
-        User.getUserById(req.params.id, (err, data) => {
-            checkDataToRes(res, data);
-        });
+        checkDataToRes(res, data);
     });
 });
 

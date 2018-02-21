@@ -4,14 +4,15 @@ const mongoose = require('mongoose');
 const config = require("./config/database");
 const passport = require("passport");
 
+
 //set up express app
 const app = express();
 
 //set connect to mongodb
-mongoose.connect(config.database);
+mongoose.connect(config.mongodb);
 mongoose.Promise = global.Promise;
-mongoose.connection.on('connected', () => console.log('connected to database :', config.database));
-mongoose.connection.on('error', () => console.log('connect to database error :', config.database));
+mongoose.connection.on('connected', () => console.log('connected to database :', config.mongodb));
+mongoose.connection.on('error', () => console.log('connect to database error :', config.mongodb));
 
 //use body parser 
 app.use(bodyParser.json());
